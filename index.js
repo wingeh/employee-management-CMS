@@ -11,5 +11,20 @@ connection.connect(function (err) {
 });
 
 function mainMenu (){
-    console.log("Main Menu")
+    console.log("Main Menu"); 
+    return;
 };
+
+// Add Departments
+
+// Add Roles
+
+// Add Employees
+
+// View Departments
+
+// View Roles
+
+// View Employees
+
+// Update Employee Roles
