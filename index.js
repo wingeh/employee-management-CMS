@@ -73,7 +73,46 @@ function createDepartment (){
 // Add Roles
 
 function createRole (){
-
+    connection.query(`SELECT * FROM department`, (err, res) => {
+        if (err) throw err;
+        let departmentArray = [];
+        res.forEach(element => {
+          departmentArray.push(element.name);
+        });
+        inquirer.prompt([
+          {
+            type: 'input',
+            name: 'title',
+            message: 'Role Title:'
+          },
+          {
+            type: 'input',
+            name: 'salary',
+            message: 'Salary:'
+          },
+          {
+            type: 'list',
+            name: 'department',
+            message: 'Department:',
+            choices: departmentArray
+          }
+    
+        ]).then((answer) => {
+          let departmentId;
+          res.forEach((element) => {
+            if (answer.department === element.name) {
+              departmentId = element.id
+            };
+          });
+          connection.query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)',
+            [answer.title, answer.salary, departmentId],
+            (err) => {
+              if (err) throw err;
+              console.log("You have successfully added " + answer.title + " to the " + answer.department + " department into the Employee Management CMS.");
+              mainMenu();
+            })
+        })
+      });
 };
 
 // Add Employees
