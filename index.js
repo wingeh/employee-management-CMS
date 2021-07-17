@@ -1,7 +1,7 @@
 //Dependencies
-const inquirer = require("inquirer");
+const inquirer = require('inquirer');
 const mysql = require('mysql');
-// const consoleTable = require('console.table');
+const consoleTable = require('console.table');
 const connection = require('./config/connections');
 
 connection.connect(function (err) {
@@ -75,18 +75,30 @@ function createEmployee (){
 // View Departments
 
 function viewDepartment () {
-
+    connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+      });
 };
 
 // View Roles
 
 function viewRoles (){
-
+    connection.query("SELECT * FROM roles", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+      });
 };
 // View Employees
 
 function viewEmployees (){
-
+    connection.query("SELECT * FROM employees", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+      });
 };
 
 // Update Employee Roles
