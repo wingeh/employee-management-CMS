@@ -1,7 +1,6 @@
 //Dependencies
 const inquirer = require('inquirer');
-const mysql = require('mysql');
-const consoleTable = require('console.table');
+const cTable = require('console.table');
 const connection = require('./config/connections');
 
 connection.connect(function (err) {
