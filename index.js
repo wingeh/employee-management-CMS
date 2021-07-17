@@ -57,7 +57,17 @@ function mainMenu (){
 // Add Departments
 
 function createDepartment (){
-
+    inquirer.prompt([{
+        type: 'input',
+        name: 'department_name',
+        message: 'New Department Name:'
+      }]).then((answer) => {
+        connection.query(`INSERT INTO department (name) VALUES (?)`, answer.department_name, (err) => {
+          if (err) throw err;
+          console.log("You have successful added the " + answer.department_name + " department into the Employee Management CMS.")
+          mainMenu();
+        })
+      })
 };
 
 // Add Roles
@@ -108,7 +118,7 @@ function createEmployee (){
                 newEmployee.push(manager);
                 connection.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, newEmployee, (err, res) => {
                   if (err) throw err;
-                    console.log("You have successfully added " + answer.first_name + " into the Employee Management CMS");
+                    console.log("You have successfully added " + answer.first_name + " into the Employee Management CMS.");
                     mainMenu();
                 })
               })
