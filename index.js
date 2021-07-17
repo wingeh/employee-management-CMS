@@ -198,7 +198,35 @@ function viewEmployees (){
 // Update Employee Roles
 
 function updateEmployee(){
+    connection.query(`SELECT * FROM employees`, (err, res) => {
+    if (err) throw err;
+    const selectEmployee = res.map(item => ({ name: `${item.first_name} ${item.last_name}`, value: item.id }))
+    connection.query(`SELECT * FROM roles`, (err, response) => {
 
+      const roles = response.map(item => ({ "name": item.title, "value": item.id }));
+      inquirer.prompt([{
+        type: 'list',
+        name: 'employeeUpdate',
+        message: 'Employees:',
+        choices: selectEmployee
+      },
+      {
+        type: 'list',
+        name: 'changeRole',
+        message: 'New Role:',
+        choices: roles
+      }
+      ]).then((answer) => {
+        connection.query(`UPDATE employees SET role_id = ? WHERE id = ?`, [answer.changeRole, answer.employeeUpdate], (err) => {
+          if (err) throw err;
+          console.log("You have successfully updated this employee's role in the Employee Management CMS.");
+          mainMenu();
+        });
+
+      });
+    });
+
+  });
 };
 
 // Quit
