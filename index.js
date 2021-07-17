@@ -69,8 +69,54 @@ function createRole (){
 // Add Employees
 
 function createEmployee (){
-
-};
+    inquirer.prompt([{
+        type: 'input',
+        name: 'first_name',
+        message: 'First Name:'
+      },
+      {
+        type: 'input',
+        name: 'last_name',
+        message: 'Last Name:'
+      },
+      ]).then((answer) => {
+        const newEmployee = [answer.first_name, answer.last_name]
+        connection.query(`SELECT roles.id, roles.title FROM roles`, (err, res) => {
+          if (err) throw err;
+          const employeeRoles = res.map(({ id, title }) => ({ name: title, value: id }));
+          inquirer.prompt([{
+            type: 'list',
+            name: 'roles',
+            message: "Select Role:",
+            choices: employeeRoles
+          }
+          ]).then(response => {
+            const role = response.roles;
+            newEmployee.push(role);
+            connection.query(`SELECT * FROM employees`, (err, res) => {
+              if (err) throw err;
+              const managers = res.map(({ id, first_name, last_name }) => ({ name: first_name + ' ' + last_name, value: id }));
+              inquirer.prompt([{
+                type: 'list',
+                name: 'manager',
+                message: 'Assign Manager:',
+                choices: managers
+              }
+    
+              ]).then(response => {
+                const manager = response.manager;
+                newEmployee.push(manager);
+                connection.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, newEmployee, (err, res) => {
+                  if (err) throw err;
+                    console.log("You have successfully added " + answer.first_name + " into the Employee Management CMS");
+                    mainMenu();
+                })
+              })
+            })
+          })
+        })
+      })
+    };
 
 // View Departments
 
